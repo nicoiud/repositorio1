@@ -1,0 +1,57 @@
+
+.headerr{  
+    display: flex;
+    text-align: center;
+   justify-content: space-around;
+   background: orangered;
+  }
+  .categorias{
+      display: flex; 
+      text-align: center;
+      justify-content: space-around;
+      background-color: orangered  
+  }
+  
+  
+  h1{
+      background-color: orangered;
+      color: black
+  }
+  
+
+  .footerAluf{
+  color: orangered ;
+          width: 100%;
+          height: 100px;
+          background: black;
+          position: fixed; left: 0; bottom: 0;
+          justify-content: space-around;
+      background-color: 0
+  
+  }
+  
+  
+  * 
+  {
+      
+      color: black;
+      
+      text-decoration: none;
+  }
+  /*
+  .filtrosProductos {
+     display: flex;
+    background-color: orangered;
+      color: #333;
+      line-height: 20px;
+      text-align: center;
+      justify-content: center
+  }
+  */
+  .productos-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  grid-gap: 50px;
+ 
+}
