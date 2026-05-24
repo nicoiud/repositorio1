@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Menu, X, Check, ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Menu, X, Check, ArrowRight, Phone, Mail, MapPin, Loader2 } from 'lucide-react';
 
 export default function MiAsistenteLanding() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
@@ -12,7 +14,7 @@ export default function MiAsistenteLanding() {
     ubicacion: '',
     tipo_negocio: '',
   });
-  const [enviado, setEnviado] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -21,18 +23,18 @@ export default function MiAsistenteLanding() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await fetch('/api/clientes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, marca: 'miasistente' }),
       });
-      if (res.ok) {
-        setEnviado(true);
-        setFormData({ nombre: '', email: '', telefono: '', ubicacion: '', tipo_negocio: '' });
-      }
+      if (res.ok) router.push('/gracias?marca=miasistente');
     } catch {
       alert('Error al enviar. Intentá de nuevo.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -197,14 +199,7 @@ export default function MiAsistenteLanding() {
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-8">Empezá Gratis Hoy</h2>
 
-          {enviado ? (
-            <div className="bg-white text-blue-600 rounded-lg p-8 text-center">
-              <Check size={48} className="mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-2">¡Solicitud recibida!</h3>
-              <p className="text-gray-600">Te enviamos el acceso en menos de 24 horas.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
               <input type="text" name="nombre" placeholder="Tu nombre" value={formData.nombre} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-300" />
               <input type="email" name="email" placeholder="Tu email" value={formData.email} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-300" />
               <input type="tel" name="telefono" placeholder="Tu teléfono / WhatsApp" value={formData.telefono} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-300" />
@@ -217,11 +212,10 @@ export default function MiAsistenteLanding() {
                 <option value="personal">Uso personal</option>
                 <option value="otro">Otro</option>
               </select>
-              <button type="submit" className="w-full bg-white text-blue-500 font-bold py-3 rounded-lg hover:bg-gray-100 transition-colors">
-                Crear Cuenta Gratis
+              <button type="submit" disabled={loading} className="w-full bg-white text-blue-500 font-bold py-3 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-70 flex items-center justify-center gap-2">
+                {loading ? <><Loader2 size={18} className="animate-spin" /> Enviando...</> : 'Crear Cuenta Gratis'}
               </button>
             </form>
-          )}
 
           <p className="text-center text-sm mt-4 opacity-90">Sin tarjeta de crédito requerida</p>
         </div>
